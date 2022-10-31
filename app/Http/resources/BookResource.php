@@ -10,13 +10,12 @@ class BookResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'category_id' => $this->category_id,
+            'author_id' => $this->author_id,
             'book_title' => $this->book_title,
             'book_summary' => $this->book_summary,
             'book_price' => $this->book_price,
             'book_cover_photo' => $this->book_cover_photo,
-            'author_name' => $this->author->author_name,
-            'category_name' => $this->category->category_name,
-            'final_price' => $this->getFinalPriceByBook($this->id)
         ];
     }
 }

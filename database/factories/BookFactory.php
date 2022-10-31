@@ -30,6 +30,7 @@ class BookFactory extends Factory
             'book_summary' => $this->faker->realTextBetween(),
             'book_price' => $this->faker->randomFloat(2, 29, 79),
             'book_cover_photo' => $this->faker->randomElement($bookCoverPhotos),
+            'quantity' => '58'
         ];
     }
 }

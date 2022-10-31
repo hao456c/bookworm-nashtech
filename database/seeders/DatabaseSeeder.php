@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BookSeeder::class,
             UserSeeder::class,
+            // set_role::class,
         ]);
     }
 }
