@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\models\Category;
 
-class categoryRepository
+class CategoryRepository
 {
     public function index()
     {

@@ -5,13 +5,13 @@ use Illuminate\Http\Request;
 use App\models\Book;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-class bookrepository
+class BookRepository
 {
      public function filterrequest(Request $request)
     {
 
 
-                $listing = Book::select('book.id','book_title','book_cover_photo','book_price')
+                $listing = Book::select('book.*')
                 ->leftjoin('discount','book.id','=','discount.book_id')
                 ->leftjoin('review','book.id','=','review.book_id')
                 ->groupBy('book.id','discount.discount_price',
@@ -37,11 +37,6 @@ class bookrepository
                             else Round(avg(rating_start),2) 
                             end as avgstar 
                             ')
-                ->selectraw('case
-                            when ( Count(rating_start) = 0 ) then 0
-                            else Count(rating_start) 
-                            end as review
-                            ')
                 ->when($request->has('author'),function($listing) use($request){
                         return $listing->where('author_id', $request->author);
                 })
@@ -52,30 +47,27 @@ class bookrepository
                         return $listing->havingraw('avg(rating_start)>='.$request->rating);      
                 });
                 switch($request->sort){
-                    case 1: $listing->orderBy('discount.discount_price','desc');
-                            break;
-                    case 2: $listing->orderBy('avgstar','asc');
+                    case 2: $listing->orderBy('avgstar','desc');
+                            $listing->orderBy('finalprice','asc');
                             break;
                     case 3: $listing->orderBy('finalprice','asc');
                             break;
                     case 4: $listing->orderBy('finalprice','desc');
                             break;
-                    default: $listing->orderBy('book.id','asc');
+                    default:$listing->orderByDesc(DB::raw('case
+                                        when ( discount.discount_price isnull ) then 0
+                                        else book_price - discount.discount_price 
+                                        end
+                                        '));
+                            $listing->orderBy('finalprice','asc');
                             break;
                 }
+                
         $res = $listing->paginate($request->limit);
            return $res;    
     }
     public function getDetailBook($id){
         return Book::find($id);
-    }
-    public static function getFinalPriceByBook($id){
-                $listing=Book::where('book.id',$id)
-                              ->leftjoin('discount','book.id','=','discount.book_id')
-                              ->groupBy('book.id','discount.discount_price');
-                $listing=Book::getFinalPrice($listing);
-                
-                return $listing->get();
     }
     public function getHomeBookOnSale(){
         $listing = Book::select('book.id','book_title','book_cover_photo','book_price','category_id')
@@ -88,7 +80,8 @@ class bookrepository
                   when ( discount.discount_price isnull ) then 0
                   else book_price - discount.discount_price 
                   end
-                  '));
+                  '))
+                  ;
         return $listing->take(10)->get();
     }
 

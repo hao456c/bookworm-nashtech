@@ -19,14 +19,12 @@ class StoreBookRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function rules()
     {
         return [
-            'book_title' => 'required|max:255',
-            'book_price' => 'required',
-            'book_summary' => 'required',
+           'id' => 'required|integer|exists:book,id',
         ];
     }
 }

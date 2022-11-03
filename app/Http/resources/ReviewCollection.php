@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
-
+use App\Models\Review;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ReviewCollection extends ResourceCollection
@@ -10,9 +10,6 @@ class ReviewCollection extends ResourceCollection
     {
         return [
             'data' => $this->collection,
-            'links' => [
-                'self' => 'link-value',
-            ],
         ];
     }
 }

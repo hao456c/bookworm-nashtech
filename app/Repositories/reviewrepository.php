@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\models\review;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-class reviewRepository
+class ReviewRepository
 {
     
     public function getReviewByBook(Request $request)

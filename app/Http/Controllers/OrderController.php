@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\StoreOrderRequest;
 use Illuminate\Http\Request;
 use App\Repositories\orderrepository;
 class OrderController extends Controller
@@ -14,13 +14,13 @@ class OrderController extends Controller
     }
 
     
-    public function createorder(Request $request)
+    public function createorder(StoreOrderRequest $request)
     {
         $userID = $request->userID;
         $itemOrderArray = $request->itemOrder;
         
         $res = $this->orderRepo->createOrder($userID,$itemOrderArray);
-        return $res;
+        return response()->json($res,201);
     }
 
 

@@ -11,4 +11,5 @@ class Author extends Model
 
     public $timestamps = false;
     protected $table = 'author';
+
 }

@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\models\Author;
 
-class authorRepository
+class AuthorRepository
 {
     public function index()
     {

@@ -20,7 +20,6 @@ class CreateReviewsTable extends Migration
             $table->text('review_details')->nullable();
             $table->timestamp('review_date');
             $table->unsignedTinyInteger('rating_start');
-            $table->foreignId('user_id')->constrained('user');
         });
     }
 

@@ -21,7 +21,6 @@ class CreateBooksTable extends Migration
             $table->text('book_summary');
             $table->decimal('book_price', 5, 2, true);
             $table->string('book_cover_photo', 20)->nullable();
-            $table->integer('quantity');
         });
     }
 
