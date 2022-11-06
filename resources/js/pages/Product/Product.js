@@ -1,214 +1,187 @@
-import "./product.css";
+import "./product.scss";
+import Image from '../../../assets';
+import serviceForProduct from '../../Services/serviceForProduct';
+import { Routes, Route, useParams } from 'react-router-dom';
+import { useState } from "react";
+import { useEffect } from "react";
+import { Card, Row, Col } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup"; 
+import BookReview from "./bookReview";
+const Product = () =>{
+    const {id} = useParams();
+    const [bookDetail, setBookDetail] = useState([]);
+    const [bookReview, setBookReview] = useState([]);
+    const [reviewFilter, setReviewFilter] = useState([]);
+    const [quantity, setQuantity] = useState(1);
+    const sortby = {
+      "3": "Price: low to high",
+      "4": "Price: high to low"
+    };
+    const limit = {
+      "5": "5",
+      "15": "15",
+      "20": "20",
+      "25": "25"
+    };
+    const minMaxQuantity = {
+        min: 1,
+        max: 8
+    };
+    const schema = yup.object().shape({
+      review_title: yup.string().required(),
+      review_details: yup.string().required(),
+      rating_start: yup.number().required(),
+    }).required();
 
-function Product(){
+    const { register, handleSubmit, formState: { errors } } = useForm({
+      resolver: yupResolver(schema)
+    });
+  useEffect(() => {
+    const fetchBookDetail = async () => {
+      const bookDetail = await serviceForProduct.getBook(id);
+      setBookDetail(bookDetail);
+    }
+    fetchBookDetail();
+  },[]);
   
+  const handleAddToCart = () => {
+    const dataCart = {
+        id: bookDetail.id,
+        quantity: quantity,
+        book: bookDetail
+    };
+    sessionStorage.setItem("item_cart",{dataCart});
+  };
+
+  const onSubmit = (data) => {
+    const newdata = {
+        book_id: id,
+        ...data
+    };
+    console.log(review);
+    const submitReview = async () => {
+        try {
+            const result = await serviceForProduct.submitReview(newdata);
+            result.book_id == id && alert("success");
+        } catch (error) {
+            if(error.response.status === 422){
+                for (const key in error.response.data.errors) {
+                    if (Object.hasOwnProperty.call(error.response.data.errors, key)) {
+                        const element = error.response.data.errors[key];
+                        alert(element[0])
+                    }
+                }
+            }
+        }
+    }
+    submitReview();
+}
     return(
-        <section class="detail-page flex-grow-1">
-    <div class="container">
-      <div class="title-section">
-        <p class="title-page font-22px">Category Name</p>
+        <section className="detail-page flex-grow-1">
+      <div className="container">
+      <div className="title-section">
+        <h3>{bookDetail.category_name}</h3>
       </div>
 
       <div>
-        <div class="row">
-          <div class="col-lg-8">
-            <div class="card card-book">
-              <div class="row">
-                <div class="col-lg-4">
-                  <img class="card-img-top" src="./assets/images/books.jpg" alt="Books" />
-                  <p class="author text-right mt-3">By (author) <span>Anna Banks</span></p>
-                </div>
-                <div class="col-lg-8">
-                  <div class="book-detail-layout">
-                    <br />
-                    <p class="book-title font-22px">Book Title</p>
-                    <br />
-                    <p>Book description</p>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat eligendi inventore impedit
-                      repellendus mollitia totam expedita a nam. Doloremque at eveniet obcaecati expedita. Soluta
-                      officia
-                      esse ipsa tempore, aliquid voluptatum?</p>
-                    <br />
-                    <p>"The multi-million copy bestseller"</p>
-                    <p>Soon to be a major fim</p>
-                    <p>A Number One New York Times Bestseller</p>
-                    <br />
-                    <p>'Painfully beautiful New York Times'</p>
-                    <p>'Unforgettable...as engrossing as it is moving' Daily Mail</p>
-                    <p>'A rare achievement' The Times</p>
-                    <p>'I can't even express how much I love this book!' Reese Witherspoon</p>
-                    <br />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="card card-add-to-card">
-              <div class="card-header">
-                <span class="price-first">$49.99</span>
-                <span class="price-sale font-22px">$29.99</span>
-              </div>
-              <div class="card-body">
-                <div class="cb-content">
-                  <p class="label">Quantity</p>
-                  <div class="quantity">
-                    <i class="fas fa-minus"></i>
-                    <span>1</span>
-                    <i class="fas fa-plus"></i>
-                  </div>
-                  <br />
-                  <br />
-                  <a class="add-btn">Add to cart</a>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="row">
+        <Col xs={12} md={8} lg={8} className="bookworm__detail__colitem mb-2">
+          <Card>
+            <Row className="bookworm__detail_card">
+                <Col xs={12} md={2} lg={6} className="bookworm__detail__colitem">
+                    <div >
+                        <img className="bookworm__detail__image__imd" src={bookDetail.book_cover_photo ? Image[bookDetail.book_cover_photo] :Image['bookDefault']}/>
+                    </div>
+                    <div className="bookworm__detail__author">
+                        <span>By (author) <strong>{bookDetail.author_name}</strong></span>
+                    </div>
+                </Col>
+                <Col xs={12} md={2} lg={5} className="p-4">
+                    <div className="bookworm__detail__title">
+                        <h3>{bookDetail.book_title}</h3>
+                    </div>
+                    <div className="bookworm__detail__description">
+                        <p><strong>Book description</strong></p>
+                        <p>{bookDetail.book_summary}</p>
+                    </div>
+                </Col>
+            </Row>
+        </Card>
+          </Col>
+          <Col>
+          <Card>
+                <Card.Header className="bookworm__detail__card__header px-4">
+                    {bookDetail.book_price === bookDetail.final_price ? (
+                        <div className="bookworm__detail__card__price">
+                            <span className="bookworm__detail__card__price__finalprice">${bookDetail.final_price}</span>
+                        </div>
+                    ) : (
+                        <div className="bookworm__detail__card__price">
+                            <span className="bookworm__detail__card__price__bookprice">${bookDetail.book_price}</span>
+                            <span className="bookworm__detail__card__price__finalprice">${bookDetail.final_price}</span>
+                        </div>
+                    )}
+                </Card.Header>
+                <Card.Body className="bookworm__detail__card__body px-4 my-4">
+                    <span className="mb-0">Quantity</span>
+                    <div className="bookworm__detail__card__body__quantity">
+                        {quantity <= minMaxQuantity.min ? (
+                            <button className="bookworm__detail__card__body__quantity__button" disabled>-</button>
+                        ) : (
+                            <button className="bookworm__detail__card__body__quantity__button" onClick={() => setQuantity(quantity - 1)}>-</button>
+                        )}
+                        <span className="bookworm__detail__card__body__quantity__number">{quantity}</span>
+                        {quantity >= minMaxQuantity.max ? (
+                            <button className="bookworm__detail__card__body__quantity__button" disabled>+</button>
+                        ) : (
+                            <button className="bookworm__detail__card__body__quantity__button" onClick={() => setQuantity(quantity + 1)}>+</button>
+                        )}
+                    </div>
+                    <div className="bookworm__detail__card__body__addtocart">
+                        <button onClick={() => handleAddToCart()}>Add to cart</button>
+                    </div>
+                </Card.Body>
+            </Card>
+          </Col>
         </div>
-        <br />
-        <div class="row">
-          <div class="col-lg-8">
-            <div class="card card-review bg-white-smoke">
-              <div class="card-body">
-                <p class="book-title">
-                  <span class="font-22px">Customer Reviews</span>
-                  <span>(Filtered by 5 star)</span>
-                </p>
-                <br />
-                <div class="row star-row">
-                  <div class="col-lg-2">
-                    <p class="point font-24px">4.6</p>
-                    <p class="number">(3,134)</p>
-                  </div>
-                  <div class="col-lg-10">
-                    <p class="point font-24px">Star</p>
-                    <ul class="list-start">
-                      <li>
-                        5 star (200)
-                      </li>
-                      <li>
-                        4 star (100)
-                      </li>
-                      <li>
-                        3 star (20)
-                      </li>
-                      <li>
-                        2 star (5)
-                      </li>
-                      <li>
-                        1 star (0)
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <br />
-                <div class="row">
-                  <div class="col-lg-6">
-                    <p>Showing 1-12 of 3134 reviews</p>
-                  </div>
-                  <div class="col-lg-6 d-flex justify-content-end">
-                    <div class="dropdown mr-4">
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Sort by date: newest to oldest</a>
-                        <a class="dropdown-item" href="#">Sort by date: oldest to newest</a>
-                      </div>
-                    </div>
-
-                    <div class="dropdown">
-                      
-                    </div>
-                  </div>
-                </div>
-
-                {/* <!-- Start 1 component --> */}
-                <div class="review-content">
-                  <p class="rc-title font-22px">Review Title <span> | 5 starts</span></p>
-                  <p class="rc-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis numquam
-                    porro error totam,
-                    exercitationem optio blanditiis nostrum quia?</p>
-                  <p class="rc-day font-14px">Month Date, Year</p>
-                </div>
-                {/* <!-- End 1 component --> */}
-                {/* <!-- Start 1 component --> */}
-                <div class="review-content">
-                  <p class="rc-title font-22px">Amazing Story! You will LOVE it <span> | 5 starts</span></p>
-                  <p class="rc-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis numquam
-                    porro error totam,
-                    exercitationem optio blanditiis nostrum quia?</p>
-                  <p class="rc-day font-14px">April 12, 2021</p>
-                </div>
-                {/* <!-- End 1 component --> */}
-                {/* <!-- Start 1 component --> */}
-                <div class="review-content">
-                  <p class="rc-title font-22px">Amazing Story! You will LOVE it <span> | 5 starts</span></p>
-                  <p class="rc-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis numquam
-                    porro error totam,
-                    exercitationem optio blanditiis nostrum quia?</p>
-                  <p class="rc-day font-14px">April 12, 2021</p>
-                </div>
-                {/* <!-- End 1 component --> */}
-                {/* <!-- Start 1 component --> */}
-                <div class="review-content">
-                  <p class="rc-title font-22px">Amazing Story! You will LOVE it <span> | 5 starts</span></p>
-                  <p class="rc-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis numquam
-                    porro error totam,
-                    exercitationem optio blanditiis nostrum quia?</p>
-                  <p class="rc-day font-14px">April 12, 2021</p>
-                </div>
-                {/* <!-- End 1 component --> */}
-                {/* <!-- Start 1 component --> */}
-                <div class="review-content">
-                  <p class="rc-title font-22px">Amazing Story! You will LOVE it <span> | 5 starts</span></p>
-                  <p class="rc-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis numquam
-                    porro error totam,
-                    exercitationem optio blanditiis nostrum quia?</p>
-                  <p class="rc-day font-14px">April 12, 2021</p>
-                </div>
-                {/* <!-- End 1 component --> */}
-                <div class="row">
-                  <div class="col-12 d-flex justify-content-center">
-                    <nav>
-                      <ul class="pagination">
-                        <li class="page-item"><a class="text-color-black page-link" href="#">Previous</a></li>
-                        <li class="page-item"><a class="text-color-black page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="text-color-black page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="text-color-black page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="text-color-black page-link" href="#">Next</a></li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="card card-write">
-              <div class="card-header bg-white">
-                <p class="font-22px">Write a Review</p>
-              </div>
-              <div class="card-body">
-                <p>Add a title</p>
-                <input class="form-control"/>
-                <br />
-                <br />
-                <p>Details please! Your review helps other shoppers</p>
-                <textarea class="form-control"></textarea>
-                <br />
-                <br />
-                <p>Select a rating star</p>
-                <select class="form-control">
-                  <option>1 Star</option>
-                  <option>2 Star</option>
-                  <option>3 Star</option>
-                  <option>4 Star</option>
-                  <option>5 Star</option>
-                </select>
-              </div>
-              <div class="card-footer bg-white">
-                <a class="submit-btn">Submit Review</a>
-              </div>
-            </div>
-          </div>
+        <div className="row">
+          <BookReview id={id} />
+          <Col>
+          <form onSubmit={handleSubmit(onSubmit)}>
+                <Card className="bookworm__review__form">
+                    <Card.Header>
+                        <h3>Write a review</h3>
+                    </Card.Header>
+                    <Card.Body>
+                        <div className="form-group mb-3">
+                            <label htmlFor="reviewTitle">Add a title</label>
+                            <input id="reviewTitle" {...register('review_title')}  className="form-control"/>
+                            <span className="text-danger">{errors.review_title?.message}</span>
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="review">Detail please! Your review helps other shoppers.</label>
+                            <textarea className="form-control" id="review" rows="3" {...register('review_details')}></textarea>
+                            <span className="text-danger">{errors.review_details?.message}</span>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="rating">Select a rating star</label>
+                            <select className="form-control" id="rating" {...register('rating_start')}>
+                                <option value="1">1 Star</option>
+                                <option value="2">2 Star</option>
+                                <option value="3">3 Star</option>
+                                <option value="4">4 Star</option>
+                                <option value="5">5 Star</option>
+                            </select>
+                        </div>
+                    </Card.Body>
+                    <Card.Footer className="px-5 py-3 bookworm__detail__card__body__addtocart mt-0">
+                        <button type="submit" >Submit Review</button>
+                    </Card.Footer>
+                </Card>
+            </form>
+          </Col>
         </div>
       </div>
     </div>

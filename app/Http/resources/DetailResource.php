@@ -25,8 +25,6 @@ class DetailResource extends JsonResource
             'book_category_name' => $this->category->category_name,
             'book_price' => $this->book_price,
             'final_price' => $this->getFinalPriceByBook($this->id),
-            'book_rating' => Review::avgRating($this -> id),
-            'book_rating_count' => Review::count($this -> id),
         ];
     }
 }

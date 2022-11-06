@@ -26,7 +26,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'itemOrder' => 'required|array',
             'itemOrder.*.book_id' => 'required|integer|exists:book,id',
-            'itemOrder.*.quantity' => 'required|integer|min:1',
+            'itemOrder.*.quantity' => 'required|integer|between:1,8',
         ];
     }
 }

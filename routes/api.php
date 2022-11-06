@@ -49,3 +49,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // review routing
     Route::get('/review',[ReviewController::class,'getReviewByBook']);
     Route::post('/review/create',[ReviewController::class,'createReview']);
+    Route::get('/review/rating', [ReviewController::class, 'getRating']);

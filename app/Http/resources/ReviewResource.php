@@ -14,6 +14,7 @@ class ReviewResource extends JsonResource
             'review_detail' => $this->review_details,
             'rating_start' => $this->rating_start,
             'book_id' =>$this->book_id,
+            'review_date' => $this->review_date
         ];
     }
 }

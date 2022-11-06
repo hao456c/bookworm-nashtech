@@ -27,7 +27,7 @@ class StoreReviewRequest extends FormRequest
             'review_title' => 'required|min:1|max:100',
             'review_details' => 'required|min:1|max:255',
             'book_id'=>'required|integer|exists:book,id',
-            'rating_start'=>'required|max:5',
+            'rating_start'=>'required|between:1,5',
         ];
     }
 }

@@ -7,6 +7,7 @@ use App\Repositories\reviewRepository;
 use App\Http\Resources\ReviewResource;
 use App\Http\Resources\ReviewCollection;
 use App\Http\Requests\StoreReviewRequest;
+use App\Http\Requests\FilterReviewsRequest;
 use Exception;
 
 class ReviewController extends Controller
@@ -36,5 +37,13 @@ class ReviewController extends Controller
         } catch (\Exception $e) {
             return response()->json('Uncessfully', 500);
         }
+    }
+    public function getRating(FilterReviewsRequest $request){
+        $respone = [
+            'rating_avg' => $this -> reviewRepo -> getRatingAvg($request -> book_id),
+            'count_stars' => $this -> reviewRepo -> getCountStars($request -> book_id)
+        ];
+
+        return response()->json($respone, 200);
     }
 }

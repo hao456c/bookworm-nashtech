@@ -18,7 +18,7 @@ class BookController extends Controller
     }
     public function getBookByID(StoreBookRequest $request){
         $res = $this->bookrepo->getDetailBook($request->id);
-        return response()->json(new DetailResource($res),200);
+        return response()->json(new BookResource($res),200);
     }
     public function indexshop(Request $request){
         $res = $this->bookrepo->filterrequest($request);
