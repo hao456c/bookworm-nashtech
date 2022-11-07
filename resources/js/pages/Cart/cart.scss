@@ -1,0 +1,82 @@
+@media (max-width: 1200px) {
+    .cart__header{
+        div {
+            display: flex;
+            justify-content: center;
+        }
+    }
+
+    .cart__booktitle {
+        display: flex;
+        justify-content: center;
+    }
+
+    .cart__price__final, .cart__price__discount {
+        display: flex;
+        justify-content: center;
+    }
+    
+}
+
+
+
+.cart__quantity {
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    background-color: #999;
+    h6 {
+        cursor: pointer;
+        font-size: 28px;
+        border-radius: 15px;
+    }
+    button {
+        height: 42px;
+        width: 42px;
+        border: none;
+        color: #000;
+    }
+}
+
+.cart__empty{
+    h5 {
+        font-size: 28px;
+        font-weight: 600;
+        text-align: center;
+    }
+}
+
+.cart__image {
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+.cart_total{
+    // Align center
+    text-align: center;
+
+    h3 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+    }
+
+    button {
+        background-color: lightgray;
+        color: #000;
+        font-size: 1.5rem;
+        font-weight: 200;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+        border: 1px solid #000;
+
+        &:hover {
+            background-color: darkgray;
+            color: #000;
+        }
+    }
+}

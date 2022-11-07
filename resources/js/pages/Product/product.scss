@@ -1,9 +1,9 @@
 
-.bookworm__detail_card{
+.detail_card{
     padding-bottom: 20px;
 }
 
-.bookworm__detail__image {
+.detail__image {
     img {
         width: 100%;
         border-top-left-radius: 0.5rem;
@@ -11,47 +11,47 @@
     }
 }
 
-.bookworm__detail__author {
+.detail__author {
     margin-top: 20px;
     text-align: right;
     font-size: 18px;
 }
 
-.bookworm__detail__description{
+.detail__description{
     font-size: 18px;
     p:first-child {
         margin-bottom: 0;
         
     }
 }
-.bookworm__detail__title{
+.detail__title{
     font-size:26px
 }
-.bookworm__detail__card__price__finalprice{
+.detail__card__price__finalprice{
     font-size: 1.5rem;
     font-weight: 600;
     color: #000;
     margin-left: 5px;
 }
 
-.bookworm__detail__card__price__bookprice{
+.detail__card__price__bookprice{
     // Text decoration line-through and color gray
     text-decoration: line-through;
     color: #999;
 }
 
-.bookworm__detail__card__price{
+.detail__card__price{
     display: flex;
     align-items: center;
 }
 
-.bookworm__detail__card__body__quantity{
+.detail__card__body__quantity{
     display: flex;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.bookworm__detail__card__body__quantity{
+.detail__card__body__quantity{
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -69,7 +69,7 @@
     }
 }
 
-.bookworm__detail__card__body__addtocart {
+.detail__card__body__addtocart {
     margin-top: 30px;
     button {
         width: 100%;

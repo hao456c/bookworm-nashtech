@@ -1,6 +1,6 @@
 import React,{ useEffect,useState } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
-import './shop.css';
+import './shop.scss';
 import Image from "../../../assets";
 import {Col} from 'react-bootstrap';
 import serviceForShop from '../../Services/serviceForShop';
@@ -46,8 +46,8 @@ const limit = {
 
  useEffect(() => {
   const fetchDataShop = async () => {
-
-        const resultBooks = await serviceForShop.getBookShop(queryString.stringify(filter));
+    try {
+      const resultBooks = await serviceForShop.getBookShop(queryString.stringify(filter));
         const allBooks = resultBooks.data;
         const total = resultBooks.meta.total;
         const finalPage = resultBooks.meta.last_page;
@@ -56,7 +56,7 @@ const limit = {
         allBooks.map((book) => (
             Object.keys(book).forEach((key) => {
                 if (key === 'book_title'){
-                  book[key] = book[key].substr(0,25)+"...";
+                  book[key] = book[key].substr(0,15)+"...";
                 }
             })
         ))
@@ -66,17 +66,25 @@ const limit = {
         setFrom(from);
         setTo(to);
         setTotal(total);
+    } catch (error) {
+      
+    }
+      
   }
   fetchDataShop();
 }, [filter]);
 useEffect(() => {
     const fetchFilterList = async () => {
-      const resultAuthors = await serviceForShop.getAuthor();
-      const resultCategories = await serviceForShop.getCategory();
-      const allAuthors = resultAuthors.data;
-      const allCategories = resultCategories.data;
-      setAllCategories(allCategories);
-      setAllAuthors(allAuthors);
+      try {
+        const resultAuthors = await serviceForShop.getAuthor();
+        const resultCategories = await serviceForShop.getCategory();
+        const allAuthors = resultAuthors.data;
+        const allCategories = resultCategories.data;
+        setAllCategories(allCategories);
+        setAllAuthors(allAuthors);
+      } catch (error) {
+        
+      }
     }
     fetchFilterList();
 },[]);
@@ -115,7 +123,7 @@ const handlepage = (page) => {
     ...filter,
     page: page
   })
-  // window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
 };
 
 const handleFilter = (value,name,key) => {
@@ -198,7 +206,7 @@ const handleFilter = (value,name,key) => {
                     <Accordion.Body>
                       {allCategories.map((category) =>{
                         return(
-                          <div className="filter__body" onClick={() => handleFilter(category.id,category.category_name,1)}>{category.category_name}</div>
+                          <div className={showing['category']== category.category_name ? "filter__body__active":"filter__body"} onClick={() => handleFilter(category.id,category.category_name,1)}>{category.category_name}</div>
                         );
                       })}
                     </Accordion.Body>
@@ -211,7 +219,7 @@ const handleFilter = (value,name,key) => {
                     <Accordion.Body>
                     {allAuthors.map((author) =>{
                         return(
-                          <div className="filter__body" onClick={() => handleFilter(author.id,author.author_name,2)}>{author.author_name}</div>
+                          <div className={showing['author']==author.author_name ? "filter__body__active":"filter__body"} onClick={() => handleFilter(author.id,author.author_name,2)}>{author.author_name}</div>
                         );
                       })}
                     </Accordion.Body>
@@ -222,11 +230,11 @@ const handleFilter = (value,name,key) => {
                   <Accordion.Item eventKey="2">
                     <Accordion.Header>Rating</Accordion.Header>
                     <Accordion.Body>
-                      <div className="filter__body" onClick={() => handleFilter(1,1,3)}>1 Star</div>
-                      <div className="filter__body" onClick={() => handleFilter(2,2,3)}>2 Star</div>
-                      <div className="filter__body" onClick={() => handleFilter(3,3,3)}>3 Star</div>
-                      <div className="filter__body" onClick={() => handleFilter(4,4,3)}>4 Star</div>
-                      <div className="filter__body" onClick={() => handleFilter(5,5,3)}>5 Star</div>
+                      <div className={showing['rating']==1 ? "filter__body__active":"filter__body"} onClick={() => handleFilter(1,1,3)}>1 Star</div>
+                      <div className={showing['rating']==2 ? "filter__body__active":"filter__body"} onClick={() => handleFilter(2,2,3)}>2 Star</div>
+                      <div className={showing['rating']==3 ? "filter__body__active":"filter__body"} onClick={() => handleFilter(3,3,3)}>3 Star</div>
+                      <div className={showing['rating']==4 ? "filter__body__active":"filter__body"} onClick={() => handleFilter(4,4,3)}>4 Star</div>
+                      <div className={showing['rating']==5 ? "filter__body__active":"filter__body"} onClick={() => handleFilter(5,5,3)}>5 Star</div>
                     </Accordion.Body>
                   </Accordion.Item>
                 </Accordion>
@@ -273,9 +281,9 @@ const handleFilter = (value,name,key) => {
                 <div id="mainRow" className="row">
                   {allBooks.map((book) => {
                       return (
-                      <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={book.id}>
+                      <div className="col-lg-3 col-md-4 col-sm-6 mb-4" style={{height:500}} key={book.id}>
                       
-                        <div className="card" onClick={()=>{Navigate(`/shop/${book.id}`)}}>
+                        <div className="card"  onClick={()=>{Navigate(`/shop/${book.id}`)}}>
                           <img className="card-img-top img-fluid" src={book.book_cover_photo ? Image[book.book_cover_photo]:Image['defaultBook']} alt="Books" />
                             <div className="card-body">
                             <p className="book-title ">{book.book_title}</p>

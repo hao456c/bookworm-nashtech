@@ -9,6 +9,7 @@ import Cart from './pages/Cart/Cart';
 import Login from './pages/Login/Login';
 import PageTitle from './components/Page-Title/pageTitle';
 import Product from './pages/Product/Product';
+import Error404 from './pages/404/404';
 // import Login from './pages/Login/Login';
 // import Register from './pages/Register/Register';
 import {Routes, Route } from 'react-router-dom';
@@ -33,7 +34,7 @@ function App() {
           </Route>
           <Route path="cart" element={<Cart />} />
           <Route path="about" element={<About />} />
-
+          <Route path="*" element={<Error404 />} />
         </Routes>
         <Footer />
         

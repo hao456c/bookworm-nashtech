@@ -16,9 +16,8 @@ class OrderController extends Controller
     
     public function createorder(StoreOrderRequest $request)
     {
-        $userID = $request->userID;
         $itemOrderArray = $request->itemOrder;
-        
+        $userID =   $request->user()->id;
         $res = $this->orderRepo->createOrder($userID,$itemOrderArray);
         return response()->json($res,201);
     }

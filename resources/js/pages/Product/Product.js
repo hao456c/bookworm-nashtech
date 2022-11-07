@@ -48,11 +48,26 @@ const Product = () =>{
   
   const handleAddToCart = () => {
     const dataCart = {
+        
         id: bookDetail.id,
         quantity: quantity,
         book: bookDetail
     };
-    sessionStorage.setItem("item_cart",{dataCart});
+    let items = [];
+    if(sessionStorage.getItem("item_cart")!=null){
+        let flag = 0;
+        items = JSON.parse(sessionStorage.getItem("item_cart"));
+        items.map((item)=>{
+            if(item.id==id){
+                if(item.quantity+dataCart.quantity<8)item.quantity+=dataCart.quantity;
+                flag=1;
+            }
+        });
+        if(flag==0)items.push(dataCart);   
+    }
+    else items.push(dataCart);
+    alert("Add to Cart sucess");
+    sessionStorage.setItem("item_cart",JSON.stringify(items));
   };
 
   const onSubmit = (data) => {
@@ -64,7 +79,10 @@ const Product = () =>{
     const submitReview = async () => {
         try {
             const result = await serviceForProduct.submitReview(newdata);
-            result.book_id == id && alert("success");
+            result.book_id == id && alert("submit review success");
+            setTimeout(function(){
+                window.location.reload();
+             }, 5000);
         } catch (error) {
             if(error.response.status === 422){
                 for (const key in error.response.data.errors) {
@@ -87,22 +105,22 @@ const Product = () =>{
 
       <div>
         <div className="row">
-        <Col xs={12} md={8} lg={8} className="bookworm__detail__colitem mb-2">
+        <Col xs={12} md={8} lg={8} className="detail__colitem mb-2">
           <Card>
-            <Row className="bookworm__detail_card">
-                <Col xs={12} md={2} lg={6} className="bookworm__detail__colitem">
+            <Row className="detail_card">
+                <Col xs={12} md={2} lg={6} className="detail__colitem">
                     <div >
-                        <img className="bookworm__detail__image__imd" src={bookDetail.book_cover_photo ? Image[bookDetail.book_cover_photo] :Image['bookDefault']}/>
+                        <img className="detail__image__imd" src={bookDetail.book_cover_photo ? Image[bookDetail.book_cover_photo] :Image['bookDefault']}/>
                     </div>
-                    <div className="bookworm__detail__author">
+                    <div className="detail__author">
                         <span>By (author) <strong>{bookDetail.author_name}</strong></span>
                     </div>
                 </Col>
                 <Col xs={12} md={2} lg={5} className="p-4">
-                    <div className="bookworm__detail__title">
+                    <div className="detail__title">
                         <h3>{bookDetail.book_title}</h3>
                     </div>
-                    <div className="bookworm__detail__description">
+                    <div className="detail__description">
                         <p><strong>Book description</strong></p>
                         <p>{bookDetail.book_summary}</p>
                     </div>
@@ -112,34 +130,34 @@ const Product = () =>{
           </Col>
           <Col>
           <Card>
-                <Card.Header className="bookworm__detail__card__header px-4">
+                <Card.Header className="detail__card__header px-4">
                     {bookDetail.book_price === bookDetail.final_price ? (
-                        <div className="bookworm__detail__card__price">
-                            <span className="bookworm__detail__card__price__finalprice">${bookDetail.final_price}</span>
+                        <div className="detail__card__price">
+                            <span className="detail__card__price__finalprice">${bookDetail.final_price}</span>
                         </div>
                     ) : (
-                        <div className="bookworm__detail__card__price">
-                            <span className="bookworm__detail__card__price__bookprice">${bookDetail.book_price}</span>
-                            <span className="bookworm__detail__card__price__finalprice">${bookDetail.final_price}</span>
+                        <div className="detail__card__price">
+                            <span className="detail__card__price__bookprice">${bookDetail.book_price}</span>
+                            <span className="detail__card__price__finalprice">${bookDetail.final_price}</span>
                         </div>
                     )}
                 </Card.Header>
-                <Card.Body className="bookworm__detail__card__body px-4 my-4">
+                <Card.Body className="detail__card__body px-4 my-4">
                     <span className="mb-0">Quantity</span>
-                    <div className="bookworm__detail__card__body__quantity">
+                    <div className="detail__card__body__quantity">
                         {quantity <= minMaxQuantity.min ? (
-                            <button className="bookworm__detail__card__body__quantity__button" disabled>-</button>
+                            <button className="detail__card__body__quantity__button" disabled>-</button>
                         ) : (
-                            <button className="bookworm__detail__card__body__quantity__button" onClick={() => setQuantity(quantity - 1)}>-</button>
+                            <button className="detail__card__body__quantity__button" onClick={() => setQuantity(quantity - 1)}>-</button>
                         )}
-                        <span className="bookworm__detail__card__body__quantity__number">{quantity}</span>
+                        <span className="detail__card__body__quantity__number">{quantity}</span>
                         {quantity >= minMaxQuantity.max ? (
-                            <button className="bookworm__detail__card__body__quantity__button" disabled>+</button>
+                            <button className="detail__card__body__quantity__button" disabled>+</button>
                         ) : (
-                            <button className="bookworm__detail__card__body__quantity__button" onClick={() => setQuantity(quantity + 1)}>+</button>
+                            <button className="detail__card__body__quantity__button" onClick={() => setQuantity(quantity + 1)}>+</button>
                         )}
                     </div>
-                    <div className="bookworm__detail__card__body__addtocart">
+                    <div className="detail__card__body__addtocart">
                         <button onClick={() => handleAddToCart()}>Add to cart</button>
                     </div>
                 </Card.Body>
@@ -150,7 +168,7 @@ const Product = () =>{
           <BookReview id={id} />
           <Col>
           <form onSubmit={handleSubmit(onSubmit)}>
-                <Card className="bookworm__review__form">
+                <Card className="review__form">
                     <Card.Header>
                         <h3>Write a review</h3>
                     </Card.Header>
@@ -176,7 +194,7 @@ const Product = () =>{
                             </select>
                         </div>
                     </Card.Body>
-                    <Card.Footer className="px-5 py-3 bookworm__detail__card__body__addtocart mt-0">
+                    <Card.Footer className="px-5 py-3 detail__card__body__addtocart mt-0">
                         <button type="submit" >Submit Review</button>
                     </Card.Footer>
                 </Card>

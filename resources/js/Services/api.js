@@ -1,10 +1,16 @@
 
 import axios from 'axios';
 
+var token = '';
+if(sessionStorage.getItem('userLogin')){
+    token = sessionStorage.getItem('token');
+}
+
 const api = axios.create({
-baseURL: 'http://localhost:8000/',
+baseURL: process.env.MIX_BASE_URL,
 headers: {
 'content-type': 'application/json',
+"Authorization": `Bearer ${token}`
 },
 });
 api.interceptors.request.use(async (config) => {

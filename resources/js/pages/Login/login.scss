@@ -1,0 +1,11 @@
+.signin_button {
+    background-color: gray;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 24px;
+    margin-top: 10px;
+    &:hover {
+        background-color: darkgray;
+        color: #000;
+    }
+}

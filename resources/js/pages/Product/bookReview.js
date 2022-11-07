@@ -129,20 +129,20 @@ function BookReview({ id }) {
 
     return (
         <React.Fragment>
-                <Col xs={12} md={8} lg={8} className="bookworm__detail__colitem mb-2">
+                <Col xs={12} md={8} lg={8} className="detail__colitem mb-2">
                     {
                         reviews.length === 0 ? (
-                            <Card className="bookworm__reviews">
-                                <Card.Body className="bookworm__reviews__body">
-                                    <div className="bookworm__review__empty">
+                            <Card className="reviews">
+                                <Card.Body className="reviews__body">
+                                    <div className="review__empty">
                                         <p>There are no reviews yet.</p>
                                     </div>
                                 </Card.Body>
                             </Card>
                         ) : (
-                            <Card className="bookworm__reviews">
-                                <Card.Body className="bookworm__reviews__body">
-                                    <div className="bookworm__reviews__title">
+                            <Card className="reviews">
+                                <Card.Body className="reviews__body">
+                                    <div className="reviews__title">
                                         <h5>Customer Reviews</h5>
                                         {
                                             filterParams.rating !== null ? (
@@ -151,26 +151,26 @@ function BookReview({ id }) {
                                         }
                                         
                                     </div>
-                                    <Row className="bookworm__reviews__statistics">
+                                    <Row className="reviews__statistics">
                                         <Col xs={12} md={2} lg={1}>
                                             <h3>{(rating.avg*1.0).toFixed(1)}</h3>
-                                            <span className='bookworm__reviews__statistics__filtertext' onClick={() => handleRatingChange(null)}>({rating.total})</span>
+                                            <span className='reviews__statistics__filtertext' onClick={() => handleRatingChange(null)}>({rating.total})</span>
                                         </Col>
                                         <Col xs={12} md={10} lg={11}>
                                             <h3>Star</h3>
-                                            <div className='bookworm__reviews__statistics__filter'>
-                                                <span onClick={() => rating.five ? handleRatingChange(5) : null} className='bookworm__reviews__statistics__filtertext'>5 star ({rating.five})</span><span> | </span>
-                                                <span onClick={() => rating.four ? handleRatingChange(4) : null} className='bookworm__reviews__statistics__filtertext'>4 star ({rating.four})</span><span> | </span>
-                                                <span onClick={() => rating.three ? handleRatingChange(3) : null} className='bookworm__reviews__statistics__filtertext'>3 star ({rating.three})</span><span> | </span>
-                                                <span onClick={() => rating.two ? handleRatingChange(2) : null} className='bookworm__reviews__statistics__filtertext'>2 star ({rating.two})</span><span> | </span>
-                                                <span onClick={() => rating.one ? handleRatingChange(1) : null} className='bookworm__reviews__statistics__filtertext'>1 star ({rating.one})</span>
+                                            <div className='reviews__statistics__filter'>
+                                                <span onClick={() => rating.five ? handleRatingChange(5) : null} className='reviews__statistics__filtertext'>5 star ({rating.five})</span><span> | </span>
+                                                <span onClick={() => rating.four ? handleRatingChange(4) : null} className='reviews__statistics__filtertext'>4 star ({rating.four})</span><span> | </span>
+                                                <span onClick={() => rating.three ? handleRatingChange(3) : null} className='reviews__statistics__filtertext'>3 star ({rating.three})</span><span> | </span>
+                                                <span onClick={() => rating.two ? handleRatingChange(2) : null} className='reviews__statistics__filtertext'>2 star ({rating.two})</span><span> | </span>
+                                                <span onClick={() => rating.one ? handleRatingChange(1) : null} className='reviews__statistics__filtertext'>1 star ({rating.one})</span>
                                             </div>
                                         </Col>
                                     </Row>
-                                    <div className="bookworm__reviews__filterbar">
+                                    <div className="reviews__filterbar">
                                         <h6>Showing {paginate.from} - {paginate.to} of {paginate.total} books</h6>
-                                        <div className="bookworm__reviews__filterbar__dropdown">
-                                            <Dropdown className="bookworm__reviews__filterbar__dropdown__sorting">
+                                        <div className="reviews__filterbar__dropdown">
+                                            <Dropdown className="reviews__filterbar__dropdown__sorting">
                                                 <Dropdown.Toggle variant="secondary" id="dropdown-basic">
                                                     Sort by {sortTypes[filterParams.sortby]}
                                                 </Dropdown.Toggle>
@@ -179,7 +179,7 @@ function BookReview({ id }) {
                                                     <Dropdown.Item onClick={() => handleSortChange(2)}>Sort by {sortTypes['oldest']}</Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown>
-                                            <Dropdown className="bookworm__reviews__filterbar__dropdown__showing">
+                                            <Dropdown className="reviews__filterbar__dropdown__showing">
                                                 <Dropdown.Toggle variant="secondary" id="dropdown-basic-2">
                                                     Show {filterParams.no_items}
                                                 </Dropdown.Toggle>
@@ -196,16 +196,16 @@ function BookReview({ id }) {
                                         return (
                                             <div key={index}>
                                                 <h4>
-                                                    {review.review_title} <span className="bookworm__reviews__rating">| {review.rating_start} stars</span>
+                                                    {review.review_title} <span className="reviews__rating">| {review.rating_start} stars</span>
                                                 </h4>
-                                                <p className="bookworm__reviews__content">{review.review_detail}</p>
-                                                <p className="bookworm__reviews__date">{convertDate(review.review_date)}</p>
+                                                <p className="reviews__content">{review.review_detail}</p>
+                                                <p className="reviews__date">{convertDate(review.review_date)}</p>
                                                 <hr />
                                             </div>
                                         );
                                     })}
 
-                                    <div className="bookworm__reviews__pagination">
+                                    <div className="reviews__pagination">
                                         <ReactPaginate 
                                             previousLabel={'Previous'}
                                             nextLabel={'Next'}

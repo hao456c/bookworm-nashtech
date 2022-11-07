@@ -22,21 +22,6 @@ class BookRepository
                           else discount.discount_price 
                           end as finalprice
                           ')
-                ->selectRaw('case
-                            when (
-                                now() >= discount.discount_start_date 
-                                and
-                                ( now() <= discount.discount_end_date 
-                                or discount.discount_end_date is null )
-                            ) then floor((book.book_price - discount_price)/book.book_price*100)
-                            else 0
-                            end as sale
-                            ')
-                ->selectraw('case
-                            when ( Round(avg(rating_start),2) isnull ) then 0
-                            else Round(avg(rating_start),2) 
-                            end as avgstar 
-                            ')
                 ->when($request->has('author'),function($listing) use($request){
                         return $listing->where('author_id', $request->author);
                 })
@@ -47,7 +32,7 @@ class BookRepository
                         return $listing->havingraw('avg(rating_start)>='.$request->rating);      
                 });
                 switch($request->sort){
-                    case 2: $listing->orderBy('avgstar','desc');
+                    case 2: $listing->orderByDesc(DB::raw('count(rating_start)'));
                             $listing->orderBy('finalprice','asc');
                             break;
                     case 3: $listing->orderBy('finalprice','asc');

@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import React,{useEffect, useState} from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper';
+import { useNavigate } from "react-router-dom";
 import 'swiper/css/navigation';
 import 'swiper/css';
 
@@ -14,7 +15,7 @@ import axios from 'axios';
 
 
 const Home = () => {
-
+  const Navigate = useNavigate();
   const [onSaleBooks, setOnSaleBooks] = useState([]);
   const [recommendedBooks, setRecommendedBooks] = useState([]);
   const [popularBooks, setPopularBooks] = useState([]);
@@ -70,7 +71,7 @@ const Home = () => {
             {onSaleBooks.map((book, idx) => {
               return (
                 <SwiperSlide key={idx} className="carousel">
-                  <div className="card h-100">
+                  <div className="card h-100" onClick={()=>{Navigate(`/shop/${book.id}`)}}>
                     <img
                       className="card-img-top img-fluid"
                       src={book.book_cover_photo ? Image[book.book_cover_photo]:Image[bookDefault]}
@@ -110,6 +111,7 @@ const Home = () => {
                 return (
                   <div
                     className="col-lg-3 col-md-4 col-sm-6 mb-4 align-items-stretch"
+                    onClick={()=>{Navigate(`/shop/${book.id}`)}}
                     key={book.id}>
                     <div className="card h-100">
                       <img
