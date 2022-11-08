@@ -12,8 +12,6 @@ import BookReview from "./bookReview";
 const Product = () =>{
     const {id} = useParams();
     const [bookDetail, setBookDetail] = useState([]);
-    const [bookReview, setBookReview] = useState([]);
-    const [reviewFilter, setReviewFilter] = useState([]);
     const [quantity, setQuantity] = useState(1);
     
     const minMaxQuantity = {
