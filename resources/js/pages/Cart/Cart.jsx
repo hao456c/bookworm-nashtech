@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Login from "../Login/Login";
 import serviceForCart from "../../Services/serviceForCart";
+import {ToastContainer,toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 function Cart(){
   const [cart,setCart] = useState([]);
   const [isShow, setIsShow] = useState(false);
@@ -18,8 +20,17 @@ function Cart(){
   },[]);
   useEffect(() => {
     let total = 0;
+    let flag = 0;
     cart.forEach((item) => {
+        if(item.book.id!=null){
         total += item.book.final_price * item.quantity;
+        }
+        else {
+            cart.splice(flag,1);
+            sessionStorage.setItem("item_cart",JSON.stringify(cart));
+            window.location.reload();
+        }
+        flag++;
     });
     setTotal(total);
   },[cart]);
@@ -33,6 +44,11 @@ function Cart(){
       }
     });
     setCart(JSON.parse(sessionStorage.getItem('item_cart')));
+  }
+  const removebook = (id) =>{
+              cart.splice(id,1);
+              sessionStorage.setItem("item_cart",JSON.stringify(cart));
+              window.location.reload();
   }
   const handleRemoveQuantity = (id) => {
     let flag = 0;
@@ -79,12 +95,48 @@ function Cart(){
                         const response = await serviceForCart.createOrder({itemOrder: itemOrder});
                         sessionStorage.removeItem('item_cart');
                         setCart([]);
-                        alert("Successfully");
-                        window.location.reload();
+                        toast.success("Success", {
+                            position: "top-right",
+                            autoClose: 10000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: true,
+                            progress: undefined,
+                          });
+                          setTimeout(function(){
+                            window.location.reload();
+                         }, 10000);
                     } catch (error) {
-                    
+                        if(error.response.status === 422){
+                            let listIdBook = [];
+                            if(error.response.data.errors.book_id){
+                                error.response.data.errors.book_id.forEach((item) => {
+                                    if(item[0].includes('book_id')){
+                                        const itemId = item[0].split(".")[1];
+                                        // console.log(itemId);
+                                        listIdBook.push(itemId);
+                                    }
+                                });
+                            }
+                            // console.log(error.response);
+                            if(listIdBook){
+                                listIdBook.map((id)=>{
+                                     removebook(id);
+                                })
+                             }
+                             toast.error("Has undefined book in your cart", {
+                                position: "top-right",
+                                autoClose: 10000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                                draggable: true,
+                                progress: undefined,
+                              });
                         }
                     }
+                }
                 order();
             }
         }
@@ -103,6 +155,7 @@ function Cart(){
         <div className="row">
         <Login show={isShow} onHide={() => setIsShow(false)} />
           <Col>
+          <ToastContainer />
           <Card>
             <Card.Header>
                 <Row className="cart__header">

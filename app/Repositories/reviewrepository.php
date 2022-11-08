@@ -14,11 +14,11 @@ class ReviewRepository
         
         $listing = Review::select('*');
         switch($request->sortby){
-            case 1:$listing->orderBy('review_date','asc');
+            case 1:$listing->orderBy('review_date','desc');
                     break;
-            case 2:$listing->orderBy('review_date','desc');
+            case 2:$listing->orderBy('review_date','asc');
                     break;
-            default:$listing->orderBy('review_date','asc');
+            default:$listing->orderBy('review_date','desc');
                     break;
         }
         $res = $listing->where('book_id',$request->id)

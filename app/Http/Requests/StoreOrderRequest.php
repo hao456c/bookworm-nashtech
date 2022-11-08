@@ -29,4 +29,20 @@ class StoreOrderRequest extends FormRequest
             'itemOrder.*.quantity' => 'required|integer|between:1,8',
         ];
     }
+    public function failedValidation($validator)
+    {
+        $errors = $validator->errors();
+        $newErrors = [];
+        foreach ($errors->get('itemOrder.*.book_id') as $error) {
+            $newErrors['book_id'][] = $error;
+        }
+        $newErrors['quantity'] = $errors->get('itemOrder.*.quantity');
+
+        $response = response()->json([
+            'message' => 'The given data was invalid.',
+            'errors' => $newErrors,
+        ], 422);
+        throw new \Illuminate\Validation\ValidationException($validator, $response);
+    }
+  
 }
