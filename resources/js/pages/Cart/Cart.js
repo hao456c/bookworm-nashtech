@@ -41,10 +41,13 @@ function Cart(){
         if(item.quantity==1){
           if (confirm("Are you sure to delete this book ?") == true) {
               cart.splice(flag,1);
+              sessionStorage.setItem("item_cart",JSON.stringify(cart));
+              window.location.reload();
           }
         }
           if(item.quantity>1)item.quantity--;
           sessionStorage.setItem("item_cart",JSON.stringify(cart));
+          
       }
       flag++;
     });
