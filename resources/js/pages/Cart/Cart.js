@@ -82,22 +82,9 @@ function Cart(){
                         alert("Successfully");
                         window.location.reload();
                     } catch (error) {
-                        if(error.response.status === 422){
-                            let listIdBook = [];
-                            if(error.response.data.errors.book_id){
-                                error.response.data.errors.book_id.forEach((item) => {
-                                    if(item[0].includes('Exists:')){
-                                        const itemId = item[0].match(/\d+/)[0];
-                                        listIdBook.push(itemId);
-                                    }
-                                });
-                            }
-                            if(listIdBook){
-                                dispatch(removeFromCart(listIdBook));
-                            }
+                    
                         }
                     }
-                }
                 order();
             }
         }
