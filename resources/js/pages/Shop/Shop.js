@@ -289,7 +289,13 @@ const handleFilter = (value,name,key) => {
                             <p className="book-title ">{book.book_title}</p>
                             <p className="book-author">{book.author_name}</p>
                             </div>
-                          <div className="card-footer text-muted font-14px">${book.final_price}</div>
+
+                          <div className="card-footer text-muted font-14px">
+                          <strike>{book.book_price === book.final_price ? "":"$"+book.book_price}</strike>
+                          <strong>
+                          ${book.final_price}
+                          </strong>
+                          </div>
                         </div>
                       </div>
                     );

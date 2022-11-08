@@ -76,6 +76,8 @@ function Cart(){
                         const response = await serviceForCart.createOrder({itemOrder: itemOrder});
                         sessionStorage.removeItem('item_cart');
                         setCart([]);
+                        alert("Successfully");
+                        window.location.reload();
                     } catch (error) {
                         if(error.response.status === 422){
                             let listIdBook = [];

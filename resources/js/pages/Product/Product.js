@@ -68,6 +68,8 @@ const Product = () =>{
     else items.push(dataCart);
     alert("Add to Cart sucess");
     sessionStorage.setItem("item_cart",JSON.stringify(items));
+    window.location.reload();
+
   };
 
   const onSubmit = (data) => {

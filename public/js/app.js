@@ -12272,12 +12272,14 @@ function Header() {
 
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
     var userLogin = sessionStorage.getItem('userLogin');
-    if (sessionStorage.getItem('item_cart')) setcartAmount(Object.keys(JSON.parse(sessionStorage.getItem('item_cart'))).length);
 
     if (userLogin) {
       setIsLogin(true);
       setFullname(userLogin);
     }
+  }, []);
+  (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
+    if (sessionStorage.getItem('item_cart')) setcartAmount(Object.keys(JSON.parse(sessionStorage.getItem('item_cart'))).length);
   }, []);
 
   var handleLogout = function handleLogout() {
@@ -12743,11 +12745,13 @@ function Cart() {
                       response = _context.sent;
                       sessionStorage.removeItem('item_cart');
                       setCart([]);
-                      _context.next = 11;
+                      alert("Successfully");
+                      window.location.reload();
+                      _context.next = 13;
                       break;
 
-                    case 8:
-                      _context.prev = 8;
+                    case 10:
+                      _context.prev = 10;
                       _context.t0 = _context["catch"](0);
 
                       if (_context.t0.response.status === 422) {
@@ -12767,12 +12771,12 @@ function Cart() {
                         }
                       }
 
-                    case 11:
+                    case 13:
                     case "end":
                       return _context.stop();
                   }
                 }
-              }, _callee, null, [[0, 8]]);
+              }, _callee, null, [[0, 10]]);
             }));
 
             return function order() {
@@ -13583,6 +13587,7 @@ var Product = function Product() {
 
     alert("Add to Cart sucess");
     sessionStorage.setItem("item_cart", JSON.stringify(items));
+    window.location.reload();
   };
 
   var onSubmit = function onSubmit(data) {
@@ -14834,7 +14839,11 @@ var Shop = function Shop() {
                       })]
                     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                       className: "card-footer text-muted font-14px",
-                      children: ["$", book.final_price]
+                      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("strike", {
+                        children: book.book_price === book.final_price ? "" : "$" + book.book_price
+                      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("strong", {
+                        children: ["$", book.final_price]
+                      })]
                     })]
                   })
                 }, book.id);

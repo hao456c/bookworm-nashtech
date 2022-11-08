@@ -10,14 +10,15 @@ function Header(){
     const [cartAmount, setcartAmount] = useState(0);
     useEffect(() => {
         const userLogin = sessionStorage.getItem('userLogin');
-        if(sessionStorage.getItem('item_cart'))
-        setcartAmount(Object.keys(JSON.parse(sessionStorage.getItem('item_cart'))).length);
         if(userLogin){
             setIsLogin(true);
             setFullname(userLogin);
         }
     }, []);
-
+    useEffect(() => {
+        if(sessionStorage.getItem('item_cart'))
+        setcartAmount(Object.keys(JSON.parse(sessionStorage.getItem('item_cart'))).length);
+    }, []);
     const handleLogout = () => {
         const signOut = async () => {
             try {
