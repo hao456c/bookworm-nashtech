@@ -15,16 +15,7 @@ const Product = () =>{
     const [bookReview, setBookReview] = useState([]);
     const [reviewFilter, setReviewFilter] = useState([]);
     const [quantity, setQuantity] = useState(1);
-    const sortby = {
-      "3": "Price: low to high",
-      "4": "Price: high to low"
-    };
-    const limit = {
-      "5": "5",
-      "15": "15",
-      "20": "20",
-      "25": "25"
-    };
+    
     const minMaxQuantity = {
         min: 1,
         max: 8
